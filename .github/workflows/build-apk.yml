@@ -35,21 +35,54 @@ jobs:
         with:
           gradle-version: '8.10.2'
 
+      - name: Read app version
+        id: version
+        shell: bash
+        run: |
+          VERSION="$(sed -n "s/.*versionName ['\"]\([^'\"]*\)['\"].*/\1/p" app/build.gradle | head -n 1)"
+          if [ -z "$VERSION" ]; then
+            echo "Could not read versionName from app/build.gradle"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Building version $VERSION"
+
+      - name: Verify stable signing files
+        shell: bash
+        run: |
+          test -f signing/keystore.properties
+          STORE_FILE="$(sed -n 's/^storeFile=//p' signing/keystore.properties | tr -d '\r' | head -n 1)"
+          if [ -z "$STORE_FILE" ]; then
+            echo "storeFile is missing in signing/keystore.properties"
+            exit 1
+          fi
+          test -f "signing/$STORE_FILE"
+          echo "Stable signing files found."
+
       - name: Run codec smoke test
         run: |
           mkdir -p build-smoke
-          javac -d build-smoke \
-            app/src/main/java/com/sione/ztetype6/XmlConfigTools.java \
-            app/src/main/java/com/sione/ztetype6/crypto/ZteType6Codec.java \
-            tools/CodecSmokeTest.java
+          javac -d build-smoke             app/src/main/java/com/sione/ztetype6/XmlConfigTools.java             app/src/main/java/com/sione/ztetype6/crypto/ZteType6Codec.java             tools/CodecSmokeTest.java
           java -cp build-smoke CodecSmokeTest
 
-      - name: Build debug APK
-        run: gradle :app:assembleDebug --stacktrace
+      - name: Build signed release APK
+        run: gradle :app:assembleRelease --stacktrace
+
+      - name: Prepare named APK
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk              "dist/ZTE-Decryptor-Android-v${{ steps.version.outputs.version }}.apk"
+          ls -lh dist/
+
+      - name: Show signing certificate
+        shell: bash
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify             --print-certs             "dist/ZTE-Decryptor-Android-v${{ steps.version.outputs.version }}.apk"
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ZTE-Type6-Tool-v1.2.0-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: ZTE-Decryptor-Android-v${{ steps.version.outputs.version }}
+          path: dist/ZTE-Decryptor-Android-v${{ steps.version.outputs.version }}.apk
           if-no-files-found: error
