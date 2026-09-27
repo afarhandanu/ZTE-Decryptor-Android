@@ -147,3 +147,11 @@ Gunakan hanya pada router milik sendiri atau perangkat yang Anda memiliki izin u
 ## Lisensi
 
 Project aplikasi ini menggunakan MIT License. Lihat `NOTICE.md` untuk atribusi proyek upstream/reference.
+
+
+## v1.2.1 build fix
+
+- Memperbaiki kompatibilitas kompilasi Android pada `XmlConfigTools`.
+- `XMLConstants.ACCESS_EXTERNAL_DTD` / `ACCESS_EXTERNAL_SCHEMA` diganti dengan URI properti JAXP literal karena konstanta tersebut tidak tersedia pada Android SDK stub.
+- Tidak ada perubahan pada algoritma Type-6, derivasi key, decrypt, encrypt, atau pilihan model router.
+

@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -57,8 +56,8 @@ public final class XmlConfigTools {
         setFeatureQuietly(factory, "http://xml.org/sax/features/external-parameter-entities", false);
         setFeatureQuietly(factory, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         try {
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+            factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
         } catch (IllegalArgumentException ignored) {
             // Some Android XML providers may not implement these JAXP attributes.
         }
