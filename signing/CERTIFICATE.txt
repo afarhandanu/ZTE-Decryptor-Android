@@ -1,0 +1,26 @@
+Alias name: zte-decryptor
+Creation date: Sep 27, 2026
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=ZTE Decryptor Android, OU=Stable Build Key, O=Local Tools, L=Yogyakarta, ST=Yogyakarta, C=ID
+Issuer: CN=ZTE Decryptor Android, OU=Stable Build Key, O=Local Tools, L=Yogyakarta, ST=Yogyakarta, C=ID
+Serial number: 88d9a6f3cf9fd6e0
+Valid from: Sun Sep 27 11:35:45 UTC 2026 until: Thu Feb 12 11:35:45 UTC 2054
+Certificate fingerprints:
+	 SHA1: 35:F2:F9:CB:AA:B4:30:99:76:2B:63:4D:D9:2A:CC:DC:99:5A:84:A3
+	 SHA256: 85:E5:16:CD:87:4B:50:E7:BE:46:D1:10:3E:15:C2:5E:23:ED:47:1E:59:D4:74:61:4C:C5:F8:C1:D6:F0:5A:AD
+Signature algorithm name: SHA384withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 31 9D 9E A2 C2 49 9F 70   38 F0 B1 64 93 41 A5 61  1....I.p8..d.A.a
+0010: 3C 01 61 19                                        <.a.
+]
+]
+

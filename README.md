@@ -1,6 +1,20 @@
-> **v1.2.2:** GPON SN / ONT SN + perbaikan scroll XML Viewer/Editor.
+> **v1.2.3:** GPON SN / ONT SN + perbaikan scroll XML Viewer/Editor.
 
-# ZTE Type 6 Tool — Android v1.2.2
+# ZTE Type 6 Tool — Android v1.2.3
+
+## Stable signature & nama APK
+
+Mulai v1.2.3, build debug dan release menggunakan signing key stabil yang sama dari folder `signing/`. Jangan hapus atau regenerasi file `signing/zte-decryptor-stable.jks` bila ingin APK versi berikutnya dapat dipasang sebagai update.
+
+GitHub Actions menghasilkan file APK bernama langsung:
+
+```text
+ZTE-Decryptor-Android-v1.2.3.apk
+```
+
+Karena build sebelum v1.2.3 dibuat oleh ephemeral debug key GitHub runner, instalasi lama perlu di-uninstall satu kali sebelum memasang v1.2.3. Setelah itu build berikutnya tetap kompatibel selama signing key ini dipertahankan.
+
+> Catatan: signing key ini disertakan di source untuk kemudahan build pribadi. Jangan gunakan key yang sama untuk distribusi publik/Play Store. Untuk distribusi publik, simpan release key privat di GitHub Secrets.
 
 Android source project untuk decrypt/encrypt `config.bin` ZTE **Payload Type 6** dan mengedit XML langsung di Android.
 
@@ -20,7 +34,7 @@ Basis workflow: release upstream **ZTE Config Tool v1.0.0.1** dari `MichaelJorky
 - Ekstraksi `DevAuthInfo` aktif ke `devauthinfo_extracted.txt`.
 - Referensi perangkat upstream: ZTE F6600P, F670L, F672Y, F679D.
 
-### Tambahan Android v1.2.2
+### Tambahan Android v1.2.3
 
 - Input **GPON SN / ONT SN** dan MAC langsung di aplikasi; tidak perlu `_sn.txt` / `_mac.txt`. D-SN diberi peringatan agar tidak salah digunakan.
 - Pemilih model router yang wajib dipilih sebelum decrypt: **F6600P, F670L, F672Y, F679D**.
@@ -90,7 +104,7 @@ Ekstraksi PPPoE mencari tabel `PPPIF`; jika tidak ada, aplikasi mencoba `WANCPPP
 5. Unduh artifact:
 
 ```text
-ZTE-Type6-Tool-v1.2.2-debug
+ZTE-Type6-Tool-v1.2.3-debug
 └── app-debug.apk
 ```
 
@@ -151,7 +165,7 @@ Gunakan hanya pada router milik sendiri atau perangkat yang Anda memiliki izin u
 Project aplikasi ini menggunakan MIT License. Lihat `NOTICE.md` untuk atribusi proyek upstream/reference.
 
 
-## v1.2.2 build fix
+## v1.2.3 build fix
 
 - Memperbaiki kompatibilitas kompilasi Android pada `XmlConfigTools`.
 - `XMLConstants.ACCESS_EXTERNAL_DTD` / `ACCESS_EXTERNAL_SCHEMA` diganti dengan URI properti JAXP literal karena konstanta tersebut tidak tersedia pada Android SDK stub.
