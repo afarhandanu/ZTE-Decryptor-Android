@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -159,7 +160,7 @@ public class MainActivity extends Activity {
         LinearLayout identity = card();
         identity.setPadding(pad, pad, pad, pad);
         identity.addView(sectionTitle("Router & identitas"));
-        identity.addView(helper("Pilih model router sesuai paket release v1.0.0.1, lalu isi SN + MAC. Pilihan model wajib sebelum decrypt dan ikut mengikat template sesi agar tidak tertukar antar-router."));
+        identity.addView(helper("Pilih model router sesuai paket release v1.0.0.1, lalu isi GPON SN / ONT SN + MAC. Gunakan GPON SN pada stiker router (contoh ZTEG12345678), bukan D-SN."));
 
         TextView modelLabel = text("Model router", 13, Color.rgb(23, 32, 51), true);
         identity.addView(modelLabel);
@@ -176,11 +177,22 @@ public class MainActivity extends Activity {
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(52)));
         addGap(identity, 12);
 
-        serialInput = input("Serial Number (12 atau 19 karakter)");
-        macInput = input("MAC Address (AA:BB:CC:00:11:22)");
-        macInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        TextView snLabel = text("GPON SN / ONT SN", 13, Color.rgb(23, 32, 51), true);
+        identity.addView(snLabel);
+        addGap(identity, 6);
+        serialInput = input("Contoh: ZTEG12345678 (bukan D-SN)");
+        serialInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         identity.addView(serialInput);
+        TextView snHelp = helper("Gunakan GPON SN / ONT SN pada label router. Jangan gunakan D-SN.");
+        snHelp.setPadding(dp(2), dp(5), 0, 0);
+        identity.addView(snHelp);
         addGap(identity, 10);
+
+        TextView macLabel = text("MAC Address", 13, Color.rgb(23, 32, 51), true);
+        identity.addView(macLabel);
+        addGap(identity, 6);
+        macInput = input("AA:BB:CC:00:11:22");
+        macInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         identity.addView(macInput);
         setTopMargin(identity, dp(14));
         root.addView(identity);
@@ -217,7 +229,7 @@ public class MainActivity extends Activity {
         LinearLayout panel = card();
         panel.setPadding(pad, pad, pad, pad);
         panel.addView(sectionTitle("Decrypt config.bin → XML"));
-        panel.addView(helper("Pilih model ZTE yang sesuai (F6600P/F670L/F672Y/F679D), lalu pilih config.bin Type 6 dan isi SN + MAC. Hasil decrypt langsung dibuka di XML Editor dan BIN yang sama otomatis menjadi template encrypt untuk model tersebut."));
+        panel.addView(helper("Pilih model ZTE yang sesuai (F6600P/F670L/F672Y/F679D), lalu pilih config.bin Type 6 dan isi GPON SN / ONT SN + MAC. Jangan gunakan D-SN. Hasil decrypt langsung dibuka di XML Editor dan BIN yang sama otomatis menjadi template encrypt untuk model tersebut."));
 
         selectedBin = fileLabel("Belum ada config.bin dipilih");
         panel.addView(selectedBin);
@@ -239,7 +251,7 @@ public class MainActivity extends Activity {
         LinearLayout panel = card();
         panel.setPadding(pad, pad, pad, pad);
         panel.addView(sectionTitle("XML Viewer / Editor"));
-        panel.addView(helper("Cari dan edit isi konfigurasi langsung di aplikasi. Quick Find disediakan untuk PPPoE/PPPIF, DevAuthInfo, username, dan password."));
+        panel.addView(helper("Cari dan edit isi konfigurasi langsung di aplikasi. Swipe di dalam kotak XML untuk menggulir isi XML; swipe di luar kotak untuk menggulir halaman. Quick Find disediakan untuk PPPoE/PPPIF, DevAuthInfo, username, dan password."));
 
         editorSummary = fileLabel("Belum ada XML dimuat.");
         panel.addView(editorSummary);
@@ -296,6 +308,25 @@ public class MainActivity extends Activity {
         xmlEditor.setHorizontallyScrolling(true);
         xmlEditor.setHorizontalScrollBarEnabled(true);
         xmlEditor.setVerticalScrollBarEnabled(true);
+        xmlEditor.setNestedScrollingEnabled(true);
+        xmlEditor.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
+        // EditText berada di dalam ScrollView halaman. Saat jari menyentuh editor,
+        // biarkan EditText menangani gesture agar isi XML bisa digulir sendiri.
+        xmlEditor.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_MOVE:
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
         xmlEditor.setPadding(dp(12), dp(12), dp(12), dp(12));
         xmlEditor.setBackground(rounded(Color.rgb(250, 251, 253), 10, Color.rgb(216, 222, 233), 1));
         panel.addView(xmlEditor, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(420)));

@@ -1,4 +1,6 @@
-# ZTE Type 6 Tool — Android v1.2.0
+> **v1.2.2:** GPON SN / ONT SN + perbaikan scroll XML Viewer/Editor.
+
+# ZTE Type 6 Tool — Android v1.2.2
 
 Android source project untuk decrypt/encrypt `config.bin` ZTE **Payload Type 6** dan mengedit XML langsung di Android.
 
@@ -12,18 +14,18 @@ Basis workflow: release upstream **ZTE Config Tool v1.0.0.1** dari `MichaelJorky
 
 - `config.bin` Type 6 → XML.
 - XML → `config_new.bin` Type 6.
-- Serial Number dan MAC Address sebagai input key material.
+- GPON SN / ONT SN dan MAC Address sebagai input key material.
 - Original `config.bin` dipakai sebagai template header/preamble ketika encrypt.
 - Ekstraksi PPPoE / `PPPIF` ke `pppif_extracted.txt`.
 - Ekstraksi `DevAuthInfo` aktif ke `devauthinfo_extracted.txt`.
 - Referensi perangkat upstream: ZTE F6600P, F670L, F672Y, F679D.
 
-### Tambahan Android v1.2.0
+### Tambahan Android v1.2.2
 
-- Input SN dan MAC langsung di aplikasi; tidak perlu `_sn.txt` / `_mac.txt`.
+- Input **GPON SN / ONT SN** dan MAC langsung di aplikasi; tidak perlu `_sn.txt` / `_mac.txt`. D-SN diberi peringatan agar tidak salah digunakan.
 - Pemilih model router yang wajib dipilih sebelum decrypt: **F6600P, F670L, F672Y, F679D**.
 - Model terikat ke template BIN selama sesi; aplikasi menolak encrypt bila model yang dipilih berbeda dari model template hasil decrypt.
-- XML Viewer / Editor di dalam APK.
+- XML Viewer / Editor di dalam APK, termasuk perbaikan nested scrolling agar isi XML dapat digulir langsung di dalam editor.
 - Quick Find:
   - `PPPIF`
   - `WANCPPP`
@@ -46,7 +48,7 @@ Basis workflow: release upstream **ZTE Config Tool v1.0.0.1** dari `MichaelJorky
 
 1. Buka tab **Decrypt**.
 2. Pilih model router: **F6600P / F670L / F672Y / F679D**.
-3. Isi **Serial Number** dan **MAC Address**.
+3. Isi **GPON SN / ONT SN** dan **MAC Address**. Jangan gunakan D-SN.
 4. Pilih `config.bin` asli dari router.
 5. Tekan **Decrypt & buka XML Editor**.
 6. Gunakan Quick Find untuk PPPoE, `DevAuthInfo`, username atau password.
@@ -88,7 +90,7 @@ Ekstraksi PPPoE mencari tabel `PPPIF`; jika tidak ada, aplikasi mencoba `WANCPPP
 5. Unduh artifact:
 
 ```text
-ZTE-Type6-Tool-v1.2.0-debug
+ZTE-Type6-Tool-v1.2.2-debug
 └── app-debug.apk
 ```
 
@@ -116,7 +118,7 @@ app/build/outputs/apk/debug/app-debug.apk
 
 Codec native Java mengimplementasikan jalur Type 6 berikut:
 
-- Key material/KP dari Serial Number + MAC.
+- Key material/KP dari GPON SN / ONT SN + MAC.
 - AES key = SHA-256(KP).
 - AES-CBC NoPadding dengan zero padding payload.
 - IV Type 6 berasal dari SHA-256 material IV ZTE dan memakai 16 byte pertama.
@@ -149,7 +151,7 @@ Gunakan hanya pada router milik sendiri atau perangkat yang Anda memiliki izin u
 Project aplikasi ini menggunakan MIT License. Lihat `NOTICE.md` untuk atribusi proyek upstream/reference.
 
 
-## v1.2.1 build fix
+## v1.2.2 build fix
 
 - Memperbaiki kompatibilitas kompilasi Android pada `XmlConfigTools`.
 - `XMLConstants.ACCESS_EXTERNAL_DTD` / `ACCESS_EXTERNAL_SCHEMA` diganti dengan URI properti JAXP literal karena konstanta tersebut tidak tersedia pada Android SDK stub.

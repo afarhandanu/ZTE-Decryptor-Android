@@ -176,7 +176,7 @@ public final class ZteType6Codec {
         } else if (serial.length() == 19) {
             serialSuffix = serial.substring(11);
         } else {
-            throw new IllegalArgumentException("Serial Number harus 12 atau 19 karakter.");
+            throw new IllegalArgumentException("GPON SN / ONT SN harus 12 atau 19 karakter. Jangan gunakan D-SN.");
         }
         return serialSuffix + reversed;
     }
@@ -184,7 +184,7 @@ public final class ZteType6Codec {
     public static void validateIdentity(String serial, String mac) {
         if (serial == null) serial = "";
         if (serial.length() != 12 && serial.length() != 19) {
-            throw new IllegalArgumentException("Serial Number harus 12 atau 19 karakter.");
+            throw new IllegalArgumentException("GPON SN / ONT SN harus 12 atau 19 karakter. Jangan gunakan D-SN.");
         }
         normalizeMac(mac);
     }
